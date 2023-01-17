@@ -22,13 +22,6 @@ public strictfp class RobotPlayer {
      */
 
     static int turnCount = 0;
-
-    /**
-     * A random number generator.
-     * We will use this RNG to make some random moves. The Random class is provided by the java.util.Random
-     * import at the top of this file. Here, we *seed* the RNG with a constant number (6147); this makes sure
-     * we get the same sequence of numbers every time this code is run. This is very useful for debugging!
-     */
     static final Random rng = new Random(6147);
 
     /** Array containing all the possible movement directions. */
@@ -50,7 +43,6 @@ public strictfp class RobotPlayer {
      * @param rc  The RobotController object. You use it to perform actions from this robot, and to get
      *            information on its current status. Essentially your portal to interacting with the world.
      **/
-    @SuppressWarnings("unused")
     public static void run(RobotController rc) throws GameActionException {
 
         // Hello world! Standard output is very useful for debugging.
