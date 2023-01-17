@@ -17,8 +17,10 @@ public strictfp class RobotPlayer {
     /**
      * We will use this variable to count the number of turns this robot has been alive.
      * You can use static variables like this to save any information you want. Keep in mind that even though
+     * Y ahora esto es mi rama Main, creo
      * these variables are static, in Battlecode they aren't actually shared between your robots.
      */
+
     static int turnCount = 0;
 
     /**
@@ -117,8 +119,7 @@ public strictfp class RobotPlayer {
             rc.buildAnchor(Anchor.STANDARD);
             rc.setIndicatorString("Building anchor! " + rc.getAnchor());
         }
-        if (rng.nextBoolean()) {
-            // Let's try to build a carrier.
+        if (turnCount % 2 == 0) {
             rc.setIndicatorString("Trying to build a carrier");
             if (rc.canBuildRobot(RobotType.CARRIER, newLoc)) {
                 rc.buildRobot(RobotType.CARRIER, newLoc);
