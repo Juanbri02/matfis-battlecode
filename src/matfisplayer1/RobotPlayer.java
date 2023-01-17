@@ -189,7 +189,7 @@ public strictfp class RobotPlayer {
 
         // If we can see a well, move towards it
         WellInfo[] wells = rc.senseNearbyWells();
-        if (wells.length > 1 && rng.nextInt(3) == 1) {
+        if (wells.length > 1 && rc.getResourceAmount(ResourceType.ADAMANTIUM) == 15) {
             WellInfo well_one = wells[1];
             Direction dir = me.directionTo(well_one.getMapLocation());
             if (rc.canMove(dir))
