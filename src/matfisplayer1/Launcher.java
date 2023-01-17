@@ -2,7 +2,10 @@ package matfisplayer1;
 
 import battlecode.common.*;
 
+import java.util.Map;
+
 public class Launcher {
+
     static void runLauncher(RobotController rc) throws GameActionException {
         int radius = rc.getType().actionRadiusSquared;
         Team opponent = rc.getTeam().opponent();
@@ -11,7 +14,6 @@ public class Launcher {
             MapLocation toAttack = enemies[0].location;
 
             if (rc.canAttack(toAttack)) {
-                rc.setIndicatorString("Attacking");
                 rc.attack(toAttack);
             }
         }
