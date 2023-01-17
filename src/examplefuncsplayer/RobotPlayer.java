@@ -13,6 +13,7 @@ import java.util.Set;
  * RobotPlayer is the class that describes your main robot strategy.
  * The run() method inside this class is like your main function: this is what we'll call once your robot
  * is created!
+ * A ver si esto funciona?!?!?!
  */
 public strictfp class RobotPlayer {
 
