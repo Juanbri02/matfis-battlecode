@@ -113,12 +113,12 @@ public strictfp class RobotPlayer {
         // Pick a direction to build in.
         Direction dir = directions[rng.nextInt(directions.length)];
         MapLocation newLoc = rc.getLocation().add(dir);
-        if (rc.canBuildAnchor(Anchor.STANDARD)) {
+        if (rc.canBuildAnchor(Anchor.STANDARD) && rc.getResourceAmount(ResourceType.ADAMANTIUM) > 100) {
             // If we can build an anchor do it!
             rc.buildAnchor(Anchor.STANDARD);
             rc.setIndicatorString("Building anchor! " + rc.getAnchor());
         }
-        if (rng.nextBoolean()) {
+        if (turnCount%2 == 0) {
             // Let's try to build a carrier.
             rc.setIndicatorString("Trying to build a carrier");
             if (rc.canBuildRobot(RobotType.CARRIER, newLoc)) {
@@ -211,18 +211,19 @@ public strictfp class RobotPlayer {
         int radius = rc.getType().actionRadiusSquared;
         Team opponent = rc.getTeam().opponent();
         RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
-        if (enemies.length >= 0) {
+        if (enemies.length > 0) {
             // MapLocation toAttack = enemies[0].location;
-            MapLocation toAttack = rc.getLocation().add(Direction.EAST);
-
+            MapLocation toAttack = enemies[0].location;
             if (rc.canAttack(toAttack)) {
                 rc.setIndicatorString("Attacking");
                 rc.attack(toAttack);
             }
         }
-
-        // Also try to move randomly.
-        Direction dir = directions[rng.nextInt(directions.length)];
+        Direction dir;
+        if(enemies.length>0 && enemies[0].getType() != RobotType.HEADQUARTERS)
+            dir = rc.getLocation().directionTo(enemies[0].location);
+        else
+            dir = directions[rng.nextInt(directions.length)];
         if (rc.canMove(dir)) {
             rc.move(dir);
         }

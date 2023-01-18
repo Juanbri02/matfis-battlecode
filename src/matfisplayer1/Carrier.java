@@ -15,57 +15,41 @@ public class Carrier {
         wellLocation = Pathfinding.findWellLocation(rc);
     }
     static void runCarrier(RobotController rc) throws GameActionException {
-        if(wellLocation == null){
-            wellLocation = Pathfinding.findWellLocation(rc);
-            Pathfinding.setObjective(wellLocation);
+        if(rc.canTakeAnchor(hqLocation,Anchor.STANDARD)) {
+            rc.takeAnchor(hqLocation, Anchor.STANDARD);
+            rc.setIndicatorString("Getting an anchor");
         }
         if (rc.getAnchor() != null) {
-            // If I have an anchor singularly focus on getting it to the first island I see
-            int[] islands = rc.senseNearbyIslands();
-            Set<MapLocation> islandLocs = new HashSet<>();
-            for (int id : islands) {
-                MapLocation[] thisIslandLocs = rc.senseNearbyIslandLocations(id);
-                islandLocs.addAll(Arrays.asList(thisIslandLocs));
-            }
-            if (islandLocs.size() > 0) {
-                MapLocation islandLocation = islandLocs.iterator().next();
-                while (!rc.getLocation().equals(islandLocation)) {
-                    Direction dir = rc.getLocation().directionTo(islandLocation);
-                    if (rc.canMove(dir)) {
-                        rc.move(dir);
-                    }
-                }
-                if (rc.canPlaceAnchor()) {
-                    rc.placeAnchor();
-                }
-            }
+            rc.setIndicatorString("Anchor");
+            Pathfinding.moveRandom(rc);
             return;
         }
-
         if(gettingRec){
+            rc.setIndicatorString("Going");
             if(wellLocation == null) {
+                wellLocation = Pathfinding.findWellLocation(rc);
+                rc.setIndicatorString("Going nowhere");
                 Pathfinding.moveRandom(rc);
             }else if (rc.canCollectResource(wellLocation, -1)) {
+                rc.setIndicatorString("Getting things");
                 rc.collectResource(wellLocation, -1);
                 if(carrying(rc) == GameConstants.CARRIER_CAPACITY) {
-                    Pathfinding.setObjective(hqLocation);
                     gettingRec = false;
                 }
             } else{
-                Pathfinding.move(rc);
+                rc.setIndicatorString("Going somewhere" + wellLocation);
+                Pathfinding.move(rc, wellLocation);
             }
         }else{
+            rc.setIndicatorString("Returning");
             ResourceType res = nonEmptyResource(rc);
             if(rc.canTransferResource(hqLocation, res, rc.getResourceAmount(res))){
                 rc.transferResource(hqLocation,res,rc.getResourceAmount(res));
-                if(carrying(rc) == 0){
-                    Pathfinding.setObjective(wellLocation);
-                    if(rc.canTakeAnchor(hqLocation,Anchor.STANDARD))
-                        rc.takeAnchor(hqLocation,Anchor.STANDARD);
+                if(carrying(rc) == 0) {
                     gettingRec = true;
                 }
             }else{
-                Pathfinding.move(rc);
+                Pathfinding.move(rc, hqLocation);
             }
         }
     }

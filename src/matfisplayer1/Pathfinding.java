@@ -13,22 +13,21 @@ public class Pathfinding {
             Direction.WEST,
             Direction.NORTHWEST,
     };
-    static MapLocation objective = null;
-    static void setObjective(MapLocation loc){
-        objective = loc;
-    }
-    static int objectiveDistance(RobotController rc){
+    static int objectiveDistance(RobotController rc, MapLocation objective){
         if(objective == null) return -1;
         return rc.getLocation().distanceSquaredTo(objective);
     }
-    static void move(RobotController rc) throws GameActionException{
+    static void move(RobotController rc, MapLocation objective) throws GameActionException{
         if(objective == null) return;
         Direction dir = rc.getLocation().directionTo(objective);
+        rc.setIndicatorString("Move towards" + dir);
         if(rc.canMove(dir)) rc.move(dir);
+        else moveRandom(rc);
     }
     static void moveRandom(RobotController rc) throws GameActionException{
         Direction dir = directions[RobotPlayer.rng.nextInt(directions.length)];
         if(rc.canMove(dir)) rc.move(dir);
+        rc.setIndicatorString("Random move");
     }
     static MapLocation findHqLocation(RobotController rc) throws GameActionException {
         RobotInfo[] units = rc.senseNearbyRobots(-1, rc.getTeam());
