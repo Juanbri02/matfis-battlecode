@@ -6,6 +6,8 @@ import battlecode.common.*;
  * This code is wrapped inside the infinite loop in run(), so it is called once per turn.
  */
 public class Headquarters {
+    static void newHeadquarters(RobotController rc) throws GameActionException {
+    }
     static void runHeadquarters(RobotController rc) throws GameActionException {
         // Pick a direction to build in.
         Direction dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];

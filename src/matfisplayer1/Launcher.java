@@ -5,7 +5,9 @@ import battlecode.common.*;
 import java.util.Map;
 
 public class Launcher {
+    static void newLauncher(RobotController rc) throws GameActionException{
 
+    }
     static void runLauncher(RobotController rc) throws GameActionException {
         int radius = rc.getType().actionRadiusSquared;
         Team opponent = rc.getTeam().opponent();

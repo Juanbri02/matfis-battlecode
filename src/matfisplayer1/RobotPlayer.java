@@ -47,41 +47,49 @@ public strictfp class RobotPlayer {
 
         // Hello world! Standard output is very useful for debugging.
         // Everything you say here will be directly viewable in your terminal when you run a match!
-        System.out.println("I'm a " + rc.getType() + " and I just got created! I have health " + rc.getHealth());
+        //System.out.println("I'm a " + rc.getType() + " and I just got created! I have health " + rc.getHealth());
+
+        try {
+            switch (rc.getType()) {
+                case HEADQUARTERS:  Headquarters.newHeadquarters(rc);  break;
+                case CARRIER:       Carrier.newCarrier(rc);   break;
+                case LAUNCHER:      Launcher.newLauncher(rc); break;
+                case BOOSTER:       Booster.newBooster(rc); break;
+                case DESTABILIZER:  Destabilizer.newDestabilizer(rc); break;
+                case AMPLIFIER:     Amplifier.newAmplifier(rc); break;
+            }
+        } catch (GameActionException e) {
+            System.out.println(rc.getType() + "Game Exception");
+            e.printStackTrace();
+        } catch (Exception e) {
+            //Normal exception
+            System.out.println(rc.getType() + "Java Exception");
+            e.printStackTrace();
+        }
 
         // You can also use indicators to save debug notes in replays.
         rc.setIndicatorString("Hello world!");
         while (true) {
-            // This code runs during the entire lifespan of the robot, which is why it is in an infinite
-            // loop. If we ever leave this loop and return from run(), the robot dies! At the end of the
-            // loop, we call Clock.yield(), signifying that we've done everything we want to do.
-
             turnCount += 1;  // We have now been alive for one more turn!
 
             // Try/catch blocks stop unhandled exceptions, which cause your robot to explode.
             try {
-                // The same run() function is called for every robot on your team, even if they are
-                // different types. Here, we separate the control depending on the RobotType, so we can
-                // use different strategies on different robots. If you wish, you are free to rewrite
-                // this into a different control structure!
                 switch (rc.getType()) {
-                    case HEADQUARTERS:     Headquarters.runHeadquarters(rc);  break;
-                    case CARRIER:      Carrier.runCarrier(rc);   break;
-                    case LAUNCHER: Launcher.runLauncher(rc); break;
-                    case BOOSTER: Booster.runBooster(rc); break;
-                    case DESTABILIZER: Destabilizer.runDestabilizer(rc); break;
-                    case AMPLIFIER: Amplifier.runAmplifier(rc); break;
+                    case HEADQUARTERS:  Headquarters.runHeadquarters(rc);  break;
+                    case CARRIER:       Carrier.runCarrier(rc);   break;
+                    case LAUNCHER:      Launcher.runLauncher(rc); break;
+                    case BOOSTER:       Booster.runBooster(rc); break;
+                    case DESTABILIZER:  Destabilizer.runDestabilizer(rc); break;
+                    case AMPLIFIER:     Amplifier.runAmplifier(rc); break;
                 }
-
             } catch (GameActionException e) {
-                // Oh no! It looks like we did something illegal in the Battlecode world. You should
+                // Oh, no! It looks like we did something illegal in the Battlecode world. You should
                 // handle GameActionExceptions judiciously, in case unexpected events occur in the game
                 // world. Remember, uncaught exceptions cause your robot to explode!
                 System.out.println(rc.getType() + " Exception");
                 e.printStackTrace();
-
             } catch (Exception e) {
-                // Oh no! It looks like our code tried to do something bad. This isn't a
+                // Oh, no! It looks like our code tried to do something bad. This isn't a
                 // GameActionException, so it's more likely to be a bug in our code.
                 System.out.println(rc.getType() + " Exception");
                 e.printStackTrace();
