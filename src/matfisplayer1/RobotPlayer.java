@@ -51,12 +51,12 @@ public strictfp class RobotPlayer {
 
         try {
             switch (rc.getType()) {
-                case HEADQUARTERS:  Headquarters.newHeadquarters(rc);  break;
-                case CARRIER:       Carrier.newCarrier(rc);   break;
-                case LAUNCHER:      Launcher.newLauncher(rc); break;
-                case BOOSTER:       Booster.newBooster(rc); break;
-                case DESTABILIZER:  Destabilizer.newDestabilizer(rc); break;
-                case AMPLIFIER:     Amplifier.newAmplifier(rc); break;
+                case HEADQUARTERS:  Headquarters.newHeadquarters(rc);   break;
+                case CARRIER:       Carrier.newCarrier(rc);             break;
+                case LAUNCHER:      Launcher.newLauncher(rc);           break;
+                case BOOSTER:       Booster.newBooster(rc);             break;
+                case DESTABILIZER:  Destabilizer.newDestabilizer(rc);   break;
+                case AMPLIFIER:     Amplifier.newAmplifier(rc);         break;
             }
         } catch (GameActionException e) {
             System.out.println(rc.getType() + "Game Exception");
@@ -75,34 +75,26 @@ public strictfp class RobotPlayer {
             // Try/catch blocks stop unhandled exceptions, which cause your robot to explode.
             try {
                 switch (rc.getType()) {
-                    case HEADQUARTERS:  Headquarters.runHeadquarters();  break;
-                    case CARRIER:       Carrier.runCarrier();   break;
-                    case LAUNCHER:      Launcher.runLauncher(); break;
-                    case BOOSTER:       Booster.runBooster(); break;
+                    case HEADQUARTERS:  Headquarters.runHeadquarters(); break;
+                    case CARRIER:       Carrier.runCarrier();           break;
+                    case LAUNCHER:      Launcher.runLauncher();         break;
+                    case BOOSTER:       Booster.runBooster();           break;
                     case DESTABILIZER:  Destabilizer.runDestabilizer(); break;
-                    case AMPLIFIER:     Amplifier.runAmplifier(); break;
+                    case AMPLIFIER:     Amplifier.runAmplifier();       break;
                 }
             } catch (GameActionException e) {
-                // Oh, no! It looks like we did something illegal in the Battlecode world. You should
-                // handle GameActionExceptions judiciously, in case unexpected events occur in the game
-                // world. Remember, uncaught exceptions cause your robot to explode!
-                System.out.println(rc.getType() + " Exception");
+                System.out.println(rc.getType() + " Game Exception");
                 e.printStackTrace();
             } catch (Exception e) {
-                // Oh, no! It looks like our code tried to do something bad. This isn't a
-                // GameActionException, so it's more likely to be a bug in our code.
-                System.out.println(rc.getType() + " Exception");
+                System.out.println(rc.getType() + " Java Exception");
                 e.printStackTrace();
 
             } finally {
-                // Signify we've done everything we want to do, thereby ending our turn.
-                // This will make our code wait until the next turn, and then perform this loop again.
                 Clock.yield();
             }
-            // End of loop: go back to the top. Clock.yield() has ended, so it's time for another turn!
         }
 
-        // Your code should never reach here (unless it's intentional)! Self-destruction imminent...
+
     }
 
 

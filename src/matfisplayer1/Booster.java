@@ -7,6 +7,7 @@ public class Booster {
     static RobotController rc;
     static void newBooster(RobotController robc) throws GameActionException {
         rc = robc;
+        Pathing.set(rc, RobotPlayer.rng.nextBoolean());
     }
     static void runBooster() throws GameActionException {
     }

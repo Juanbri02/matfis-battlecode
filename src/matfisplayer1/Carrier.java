@@ -2,13 +2,15 @@ package matfisplayer1;
 
 import battlecode.common.*;
 
+import java.util.Random;
+
 public class Carrier {
     static MapLocation hqLocation, wellLocation, islandLocation;
     static boolean gettingRec = true;
     static RobotController rc;
     static void newCarrier(RobotController robc) throws GameActionException{
         rc = robc;
-        Pathing.setRc(rc);
+        Pathing.set(rc, RobotPlayer.rng.nextBoolean());
         hqLocation = Pathing.findHqLocation();
         wellLocation = Pathing.findWellLocation();
         islandLocation = Pathing.findIslandLocation();
@@ -36,7 +38,7 @@ public class Carrier {
             }else if (rc.canCollectResource(wellLocation, -1)) {
                 rc.setIndicatorString("Getting things");
                 rc.collectResource(wellLocation, -1);
-                if(carrying(rc) == GameConstants.CARRIER_CAPACITY) {
+                if(carrying() == GameConstants.CARRIER_CAPACITY) {
                     gettingRec = false;
                 }
             } else{
@@ -45,10 +47,10 @@ public class Carrier {
             }
         }else{
             rc.setIndicatorString("Returning");
-            ResourceType res = nonEmptyResource(rc);
+            ResourceType res = nonEmptyResource();
             if(rc.canTransferResource(hqLocation, res, rc.getResourceAmount(res))){
                 rc.transferResource(hqLocation,res,rc.getResourceAmount(res));
-                if(carrying(rc) == 0) {
+                if(carrying() == 0) {
                     gettingRec = true;
                 }
             }else{
@@ -56,10 +58,10 @@ public class Carrier {
             }
         }
     }
-    static int carrying(RobotController rc){
+    private static int carrying(){
         return rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.ELIXIR) + rc.getResourceAmount(ResourceType.MANA);
     }
-    static ResourceType nonEmptyResource(RobotController rc){
+    private static ResourceType nonEmptyResource(){
         if (rc.getResourceAmount(ResourceType.ADAMANTIUM) != 0) return ResourceType.ADAMANTIUM;
         if (rc.getResourceAmount(ResourceType.MANA) != 0) return ResourceType.MANA;
         return ResourceType.ELIXIR;

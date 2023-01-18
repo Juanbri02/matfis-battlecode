@@ -20,12 +20,14 @@ public class Pathing {
         if(objective == null) return -1;
         return rc.getLocation().distanceSquaredTo(objective);
     }
-    static void moveBug(MapLocation objective) throws GameActionException{
+    static void move(MapLocation objective) throws GameActionException{
+        if(objective == null) moveRandom();
         MapLocation actual = rc.getLocation();
         if(actual.equals(objective) || !rc.isMovementReady()) return;
         Direction dir = actual.directionTo(objective);
         if(rc.canMove(dir)) {
             rc.move(dir);
+            rc.setIndicatorString("Puedo direccion buena");
             currentDirection = null;
             return;
         }
@@ -35,22 +37,14 @@ public class Pathing {
         for(int i = 0; i < directions.length; ++i) {
             currentDirection = (rightHanded ? currentDirection.rotateRight() : currentDirection.rotateLeft());
             if (rc.canMove(currentDirection)) {
-                rc.move(dir);
+                rc.setIndicatorString("Puedo direccion" + currentDirection);
+                rc.move(currentDirection);
                 currentDirection = (rightHanded ? currentDirection.rotateLeft() : currentDirection.rotateRight());
                 return;
             }
         }
+        rc.setIndicatorString("no puedo");
         currentDirection = null;
-    }
-    static void move(MapLocation objective) throws GameActionException{
-        if(objective == null) {
-            moveRandom();
-            return;
-        }
-        Direction dir = rc.getLocation().directionTo(objective);
-        rc.setIndicatorString("Move towards" + dir);
-        if(rc.canMove(dir)) rc.move(dir);
-        else moveRandom();
     }
     static void moveRandom() throws GameActionException{
         Direction dir = directions[RobotPlayer.rng.nextInt(directions.length)];
@@ -62,7 +56,7 @@ public class Pathing {
         for(RobotInfo u : units) if(u.getType() == RobotType.HEADQUARTERS) return u.getLocation();
         return null;
     }
-    static MapLocation findWellLocation() throws GameActionException{
+    static MapLocation findWellLocation() {
         WellInfo[] wells = rc.senseNearbyWells();
         if(wells.length > 0) return wells[0].getMapLocation();
         return null;
@@ -72,7 +66,8 @@ public class Pathing {
         if(islands.length > 0) return rc.senseNearbyIslandLocations(islands[0])[0];
         return null;
     }
-    static void setRc(RobotController robc){
+    static void set(RobotController robc, boolean b){
         rc = robc;
+        rightHanded = b;
     }
 }

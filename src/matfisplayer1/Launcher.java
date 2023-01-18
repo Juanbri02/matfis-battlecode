@@ -6,7 +6,7 @@ public class Launcher {
     static RobotController rc;
     static void newLauncher(RobotController robc) throws GameActionException{
         rc = robc;
-        Pathing.setRc(rc);
+        Pathing.set(rc, RobotPlayer.rng.nextBoolean());
     }
     static void runLauncher() throws GameActionException {
         int radius = rc.getType().actionRadiusSquared;
