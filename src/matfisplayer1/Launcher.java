@@ -2,14 +2,13 @@ package matfisplayer1;
 
 import battlecode.common.*;
 
-import java.nio.file.Path;
-import java.util.Map;
-
 public class Launcher {
-    static void newLauncher(RobotController rc) throws GameActionException{
-
+    static RobotController rc;
+    static void newLauncher(RobotController robc) throws GameActionException{
+        rc = robc;
+        Pathing.setRc(rc);
     }
-    static void runLauncher(RobotController rc) throws GameActionException {
+    static void runLauncher() throws GameActionException {
         int radius = rc.getType().actionRadiusSquared;
         Team opponent = rc.getTeam().opponent();
         RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
@@ -23,7 +22,7 @@ public class Launcher {
             }
             break;
         }
-        if(dir == null) Pathfinding.moveRandom(rc);
+        if(dir == null) Pathing.moveRandom();
         if (rc.canMove(dir)) {
             rc.move(dir);
         }

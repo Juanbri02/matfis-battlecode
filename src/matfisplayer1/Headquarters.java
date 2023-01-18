@@ -6,17 +6,14 @@ import battlecode.common.*;
  * This code is wrapped inside the infinite loop in run(), so it is called once per turn.
  */
 public class Headquarters {
-    static void newHeadquarters(RobotController rc) throws GameActionException {
+    static RobotController rc;
+    static void newHeadquarters(RobotController robc) throws GameActionException {
+        rc = robc;
     }
-    static void runHeadquarters(RobotController rc) throws GameActionException {
+    static void runHeadquarters() throws GameActionException {
         // Pick a direction to build in.
         Direction dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
         MapLocation newLoc = rc.getLocation().add(dir);
-        if (rc.canBuildAnchor(Anchor.STANDARD) && rc.getResourceAmount(ResourceType.ADAMANTIUM) > 80 ) {
-            // If we can build an anchor do it!
-            rc.buildAnchor(Anchor.STANDARD);
-            rc.setIndicatorString("Building anchor! " + rc.getAnchor());
-        }
         if (RobotPlayer.turnCount % 2 == 0) {
             rc.setIndicatorString("Trying to build a carrier");
             if (rc.canBuildRobot(RobotType.CARRIER, newLoc)) {
@@ -28,6 +25,11 @@ public class Headquarters {
             if (rc.canBuildRobot(RobotType.LAUNCHER, newLoc)) {
                 rc.buildRobot(RobotType.LAUNCHER, newLoc);
             }
+        }
+        if (rc.canBuildAnchor(Anchor.STANDARD) && rc.getResourceAmount(ResourceType.ADAMANTIUM) > 100 ) {
+            // If we can build an anchor do it!
+            rc.buildAnchor(Anchor.STANDARD);
+            rc.setIndicatorString("Building anchor! " + rc.getAnchor());
         }
     }
 }

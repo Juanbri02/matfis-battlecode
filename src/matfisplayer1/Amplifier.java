@@ -3,8 +3,10 @@ package matfisplayer1;
 import battlecode.common.*;
 
 public class Amplifier {
-    static void newAmplifier(RobotController rc) throws GameActionException {
+    static RobotController rc;
+    static void newAmplifier(RobotController robc) throws GameActionException {
+        rc = robc;
     }
-    static void runAmplifier(RobotController rc) throws GameActionException {
+    static void runAmplifier() throws GameActionException {
     }
 }

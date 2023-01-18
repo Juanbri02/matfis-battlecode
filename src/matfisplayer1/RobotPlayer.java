@@ -75,12 +75,12 @@ public strictfp class RobotPlayer {
             // Try/catch blocks stop unhandled exceptions, which cause your robot to explode.
             try {
                 switch (rc.getType()) {
-                    case HEADQUARTERS:  Headquarters.runHeadquarters(rc);  break;
-                    case CARRIER:       Carrier.runCarrier(rc);   break;
-                    case LAUNCHER:      Launcher.runLauncher(rc); break;
-                    case BOOSTER:       Booster.runBooster(rc); break;
-                    case DESTABILIZER:  Destabilizer.runDestabilizer(rc); break;
-                    case AMPLIFIER:     Amplifier.runAmplifier(rc); break;
+                    case HEADQUARTERS:  Headquarters.runHeadquarters();  break;
+                    case CARRIER:       Carrier.runCarrier();   break;
+                    case LAUNCHER:      Launcher.runLauncher(); break;
+                    case BOOSTER:       Booster.runBooster(); break;
+                    case DESTABILIZER:  Destabilizer.runDestabilizer(); break;
+                    case AMPLIFIER:     Amplifier.runAmplifier(); break;
                 }
             } catch (GameActionException e) {
                 // Oh, no! It looks like we did something illegal in the Battlecode world. You should

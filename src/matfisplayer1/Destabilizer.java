@@ -4,8 +4,10 @@ import battlecode.common.GameActionException;
 import battlecode.common.RobotController;
 
 public class Destabilizer {
-    static void newDestabilizer(RobotController rc) throws GameActionException {
+    static RobotController rc;
+    static void newDestabilizer(RobotController robc) throws GameActionException {
+        rc = robc;
     }
-    static void runDestabilizer(RobotController rc) throws GameActionException {
+    static void runDestabilizer() throws GameActionException {
     }
 }
