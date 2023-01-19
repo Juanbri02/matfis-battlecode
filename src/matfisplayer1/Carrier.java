@@ -2,73 +2,68 @@ package matfisplayer1;
 
 import battlecode.common.*;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Random;
 
 public class Carrier {
-    static void runCarrier(RobotController rc) throws GameActionException {
+    static MapLocation hqLocation, wellLocation, islandLocation;
+    static boolean gettingRec = true;
+    static RobotController rc;
+    static void newCarrier(RobotController robc) throws GameActionException{
+        rc = robc;
+        Pathing.set(rc, RobotPlayer.rng.nextBoolean());
+        hqLocation = Pathing.findHqLocation();
+        wellLocation = Pathing.findWellLocation();
+        islandLocation = Pathing.findIslandLocation();
+    }
+    static void runCarrier() throws GameActionException {
+        if(rc.canTakeAnchor(hqLocation,Anchor.STANDARD)) {
+            rc.takeAnchor(hqLocation, Anchor.STANDARD);
+            rc.setIndicatorString("Getting an anchor");
+        }
         if (rc.getAnchor() != null) {
-            // If I have an anchor singularly focus on getting it to the first island I see
-            int[] islands = rc.senseNearbyIslands();
-            Set<MapLocation> islandLocs = new HashSet<>();
-            for (int id : islands) {
-                MapLocation[] thisIslandLocs = rc.senseNearbyIslandLocations(id);
-                islandLocs.addAll(Arrays.asList(thisIslandLocs));
-            }
-            if (islandLocs.size() > 0) {
-                MapLocation islandLocation = islandLocs.iterator().next();
-                rc.setIndicatorString("Moving my anchor towards " + islandLocation);
-                while (!rc.getLocation().equals(islandLocation)) {
-                    Direction dir = rc.getLocation().directionTo(islandLocation);
-                    if (rc.canMove(dir)) {
-                        rc.move(dir);
-                    }
-                }
-                if (rc.canPlaceAnchor()) {
-                    rc.setIndicatorString("Huzzah, placed anchor!");
-                    rc.placeAnchor();
-                }
-            }
+            rc.setIndicatorString("Anchor");
+            if(islandLocation == null)
+                islandLocation = Pathing.findIslandLocation();
+            Pathing.move(islandLocation);
+            if(rc.canPlaceAnchor())
+                rc.placeAnchor();
+            return;
         }
-        // Try to gather from squares around us.
-        MapLocation me = rc.getLocation();
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                MapLocation wellLocation = new MapLocation(me.x + dx, me.y + dy);
-                if (rc.canCollectResource(wellLocation, -1)) {
-                    if (RobotPlayer.rng.nextBoolean()) {
-                        rc.collectResource(wellLocation, -1);
-                        rc.setIndicatorString("Collecting, now have, AD:" +
-                                rc.getResourceAmount(ResourceType.ADAMANTIUM) +
-                                " MN: " + rc.getResourceAmount(ResourceType.MANA) +
-                                " EX: " + rc.getResourceAmount(ResourceType.ELIXIR));
-                    }
+        if(gettingRec){
+            rc.setIndicatorString("Going");
+            if(wellLocation == null) {
+                wellLocation = Pathing.findWellLocation();
+                rc.setIndicatorString("Going nowhere");
+                Pathing.moveRandom();
+            }else if (rc.canCollectResource(wellLocation, -1)) {
+                rc.setIndicatorString("Getting things");
+                rc.collectResource(wellLocation, -1);
+                if(carrying() == GameConstants.CARRIER_CAPACITY) {
+                    gettingRec = false;
                 }
+            } else{
+                rc.setIndicatorString("Going somewhere" + wellLocation);
+                Pathing.move(wellLocation);
+            }
+        }else{
+            rc.setIndicatorString("Returning");
+            ResourceType res = nonEmptyResource();
+            if(rc.canTransferResource(hqLocation, res, rc.getResourceAmount(res))){
+                rc.transferResource(hqLocation,res,rc.getResourceAmount(res));
+                if(carrying() == 0) {
+                    gettingRec = true;
+                }
+            }else{
+                Pathing.move(hqLocation);
             }
         }
-        // Occasionally try out the carriers attack
-        if (RobotPlayer.rng.nextInt(20) == 1) {
-            RobotInfo[] enemyRobots = rc.senseNearbyRobots(-1, rc.getTeam().opponent());
-            if (enemyRobots.length > 0) {
-                if (rc.canAttack(enemyRobots[0].location)) {
-                    rc.attack(enemyRobots[0].location);
-                }
-            }
-        }
-
-        // If we can see a well, move towards it
-        WellInfo[] wells = rc.senseNearbyWells();
-        if (wells.length > 1 && rc.getResourceAmount(ResourceType.ADAMANTIUM) == 15) {
-            WellInfo well_one = wells[1];
-            Direction dir = me.directionTo(well_one.getMapLocation());
-            if (rc.canMove(dir))
-                rc.move(dir);
-        }
-        // Also try to move randomly.
-        Direction dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
-        if (rc.canMove(dir)) {
-            rc.move(dir);
-        }
+    }
+    private static int carrying(){
+        return rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.ELIXIR) + rc.getResourceAmount(ResourceType.MANA);
+    }
+    private static ResourceType nonEmptyResource(){
+        if (rc.getResourceAmount(ResourceType.ADAMANTIUM) != 0) return ResourceType.ADAMANTIUM;
+        if (rc.getResourceAmount(ResourceType.MANA) != 0) return ResourceType.MANA;
+        return ResourceType.ELIXIR;
     }
 }
