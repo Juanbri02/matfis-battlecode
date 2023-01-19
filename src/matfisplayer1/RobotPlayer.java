@@ -2,10 +2,7 @@ package matfisplayer1;
 
 import battlecode.common.*;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Random;
-import java.util.Set;
 
 /**
  * RobotPlayer is the class that describes your main robot strategy.
@@ -97,40 +94,6 @@ public strictfp class RobotPlayer {
 
 
     }
-    //códigos copiados, funciones que combierten localizaciones en enteros y viceversa.
-    private static int locationtoint(RobotController rc, MapLocation m){
-        if (m==null){
-            return 0;
-        }
-        return 1+m.x+rc.getMapWidth()*m.y;
-    }
-    private static MapLocation inttolocation(RobotController rc, int m){
-        if (m==0){
-            return null;
-        }
-        m=m-1;
-        return new MapLocation(m%rc.getMapWidth(), m/rc.getMapWidth());
-    }
-    //creo que esto es para guardar la localizacion de los headquarters, lo que no se es donde se guarda
-    private static MapLocation[] headquartersloc = new MapLocation[GameConstants.MAX_STARTING_HEADQUARTERS];
-    static void addheadquarter(RobotController rc) throws GameActionException{
-        MapLocation me = rc.getLocation();
-        for (int i = 0; i<GameConstants.MAX_STARTING_HEADQUARTERS; ++i){
-            if(rc.readSharedArray(i)==0){
-                rc.writeSharedArray(i, locationtoint(rc, me));
-                break;
-            }
-        }
-    }
-    static void updateheadquarterinfo(RobotController rc) throws GameActionException{
-        if(RobotPlayer.turnCount==2){
-            for (int i = 0; i<GameConstants.MAX_STARTING_HEADQUARTERS; ++i){
-                headquartersloc[i]=(inttolocation(rc, rc.readSharedArray(i)))
-                if(rc.readSharedArray(i)==0){
-                    break;
-                }
-            }
-        }
-    }
+
 
 }

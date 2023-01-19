@@ -13,6 +13,7 @@ public class Carrier {
         Pathing.set(rc, RobotPlayer.rng.nextBoolean());
         hqLocation = Pathing.findHqLocation();
         wellLocation = Pathing.findWellLocation();
+        Pathing.setObjective(wellLocation);
         islandLocation = Pathing.findIslandLocation();
     }
     static void runCarrier() throws GameActionException {
@@ -22,28 +23,33 @@ public class Carrier {
         }
         if (rc.getAnchor() != null) {
             rc.setIndicatorString("Anchor");
-            if(islandLocation == null)
+            if(islandLocation == null) {
                 islandLocation = Pathing.findIslandLocation();
-            Pathing.move(islandLocation);
-            if(rc.canPlaceAnchor())
+                Pathing.setObjective(islandLocation);
+            }
+            Pathing.move();
+            if(rc.canPlaceAnchor()) {
                 rc.placeAnchor();
+            }
             return;
         }
         if(gettingRec){
             rc.setIndicatorString("Going");
             if(wellLocation == null) {
                 wellLocation = Pathing.findWellLocation();
+                Pathing.setObjective(wellLocation);
                 rc.setIndicatorString("Going nowhere");
-                Pathing.moveRandom();
+                Pathing.move();
             }else if (rc.canCollectResource(wellLocation, -1)) {
                 rc.setIndicatorString("Getting things");
                 rc.collectResource(wellLocation, -1);
                 if(carrying() == GameConstants.CARRIER_CAPACITY) {
                     gettingRec = false;
+                    Pathing.setObjective(hqLocation);
                 }
             } else{
                 rc.setIndicatorString("Going somewhere" + wellLocation);
-                Pathing.move(wellLocation);
+                Pathing.move();
             }
         }else{
             rc.setIndicatorString("Returning");
@@ -52,9 +58,10 @@ public class Carrier {
                 rc.transferResource(hqLocation,res,rc.getResourceAmount(res));
                 if(carrying() == 0) {
                     gettingRec = true;
+                    Pathing.setObjective(wellLocation);
                 }
             }else{
-                Pathing.move(hqLocation);
+                Pathing.move();
             }
         }
     }

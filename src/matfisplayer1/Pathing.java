@@ -6,6 +6,7 @@ public class Pathing {
     static Direction currentDirection;
     static boolean rightHanded;
     static RobotController rc;
+    static MapLocation objective;
     static final Direction[] directions = {
             Direction.NORTH,
             Direction.NORTHEAST,
@@ -20,7 +21,7 @@ public class Pathing {
         if(objective == null) return -1;
         return rc.getLocation().distanceSquaredTo(objective);
     }
-    static void move(MapLocation objective) throws GameActionException{
+    static void move() throws GameActionException{
         if(objective == null) moveRandom();
         MapLocation actual = rc.getLocation();
         if(actual.equals(objective) || !rc.isMovementReady()) return;
@@ -69,5 +70,8 @@ public class Pathing {
     static void set(RobotController robc, boolean b){
         rc = robc;
         rightHanded = b;
+    }
+    static void setObjective(MapLocation loc){
+        objective = loc;
     }
 }
