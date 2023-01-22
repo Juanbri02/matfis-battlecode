@@ -5,10 +5,11 @@ import battlecode.common.*;
  * Run a single turn for a Headquarters.
  * This code is wrapped inside the infinite loop in run(), so it is called once per turn.
  */
-public class Headquarters {
-    static RobotController rc;
+public class Headquarters extends Robot{
     static void newHeadquarters(RobotController robc) throws GameActionException {
         rc = robc;
+        Comms.setRC(rc);
+        Comms.addHeadquarter();
     }
     static void runHeadquarters() throws GameActionException {
         // Pick a direction to build in.
@@ -31,5 +32,6 @@ public class Headquarters {
             rc.buildAnchor(Anchor.STANDARD);
             rc.setIndicatorString("Building anchor! " + rc.getAnchor());
         }
+        Comms.dumpQueue();
     }
 }

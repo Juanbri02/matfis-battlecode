@@ -4,14 +4,13 @@ import battlecode.common.*;
 
 import java.util.Random;
 
-public class Carrier {
+public class Carrier extends Robot{
     static MapLocation hqLocation, wellLocation, islandLocation;
     static boolean gettingRec = true;
-    static RobotController rc;
     static void newCarrier(RobotController robc) throws GameActionException{
         rc = robc;
         Pathing.set(rc, RobotPlayer.rng.nextBoolean());
-        hqLocation = Pathing.findHqLocation();
+        HQs = Comms.updateHeadquarterInfo();
         wellLocation = Pathing.findWellLocation();
         Pathing.setObjective(wellLocation);
         islandLocation = Pathing.findIslandLocation();
