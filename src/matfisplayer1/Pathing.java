@@ -21,6 +21,9 @@ public class Pathing {
         if(objective == null) return -1;
         return rc.getLocation().distanceSquaredTo(objective);
     }
+    static void setRandomObjective(){
+        objective = new MapLocation(RobotPlayer.rng.nextInt(rc.getMapHeight()), RobotPlayer.rng.nextInt(rc.getMapWidth()));
+    }
     static void move() throws GameActionException{
         if(objective == null) moveRandom();
         MapLocation actual = rc.getLocation();
@@ -67,11 +70,26 @@ public class Pathing {
         if(islands.length > 0) return rc.senseNearbyIslandLocations(islands[0])[0];
         return null;
     }
+    static void moveTowards(MapLocation obj) throws GameActionException{
+        Direction dir = rc.getLocation().directionTo(obj);
+        if (rc.canMove(dir)) {
+            rc.move(dir);
+            return;
+        }
+        if(rc.canMove(dir.rotateLeft())){
+            rc.move(dir.rotateLeft());
+            return;
+        }
+        if(rc.canMove(dir.rotateRight())){
+            rc.move(dir.rotateRight());
+        }
+    }
     static void set(RobotController robc, boolean b){
         rc = robc;
         rightHanded = b;
     }
     static void setObjective(MapLocation loc){
         objective = loc;
+        currentDirection = null;
     }
 }

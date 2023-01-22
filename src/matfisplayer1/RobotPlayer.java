@@ -50,10 +50,11 @@ public strictfp class RobotPlayer {
             } catch (GameActionException e) {
                 System.out.println(rc.getType() + " Game Exception");
                 e.printStackTrace();
+                rc.setIndicatorString(rc.getType() + " Game Exception");
             } catch (Exception e) {
                 System.out.println(rc.getType() + " Java Exception");
                 e.printStackTrace();
-
+                rc.setIndicatorString(rc.getType() + " Java Exception");
             } finally {
                 Clock.yield();
             }
