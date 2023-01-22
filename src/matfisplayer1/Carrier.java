@@ -11,6 +11,7 @@ public class Carrier extends Robot{
         rc = robc;
         Pathing.set(rc, RobotPlayer.rng.nextBoolean());
         HQs = Comms.updateHeadquarterInfo();
+        hqLocation = Pathing.findHqLocation();
         wellLocation = Pathing.findWellLocation();
         Pathing.setObjective(wellLocation);
         islandLocation = Pathing.findIslandLocation();
