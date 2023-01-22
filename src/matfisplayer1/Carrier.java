@@ -14,6 +14,7 @@ public class Carrier extends Robot{
         wellLocation = Pathing.findWellLocation();
         Pathing.setObjective(wellLocation);
         islandLocation = Pathing.findIslandLocation();
+        System.out.println(rc.getType() + " HE nadic");
     }
     static void runCarrier() throws GameActionException {
         if(rc.canTakeAnchor(hqLocation,Anchor.STANDARD)) {
