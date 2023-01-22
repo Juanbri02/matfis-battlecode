@@ -10,6 +10,8 @@ public class Carrier extends Robot{
     static void newCarrier(RobotController robc) throws GameActionException{
         rc = robc;
         Pathing.set(rc, RobotPlayer.rng.nextBoolean());
+        Comms.setRC(rc);
+
         HQs = Comms.updateHeadquarterInfo();
         hqLocation = Pathing.findHqLocation();
         wellLocation = Pathing.findWellLocation();

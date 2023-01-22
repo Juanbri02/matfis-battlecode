@@ -14,11 +14,12 @@ public class Launcher {
     static void runLauncher() throws GameActionException {
         Team opponent = rc.getTeam().opponent();
         RobotInfo[] enemies = rc.senseNearbyRobots(-1, opponent);
+        RobotInfo[] allies = rc.senseNearbyRobots(-1, rc.getTeam());
         MapLocation toAttack = getTarget(enemies);
         if (rc.canAttack(toAttack)) {
             rc.attack(toAttack);
         }
-        Direction dir = moveDirection(enemies);
+        Direction dir = moveGroup(allies);
         rc.setIndicatorString("Moviendo a " + dir);
         System.out.println("I'm a " + rc.getType() + " and I just got created! I have health " + rc.getHealth());
         if (rc.canMove(dir)) {
@@ -38,6 +39,14 @@ public class Launcher {
             }
         }
         return loc;
+    }
+    static Direction moveGroup(RobotInfo[] allies){
+        int minID = rc.getID();
+        Direction dir = null;
+        for(RobotInfo r : allies) if(r.ID < rc.getID()){
+
+        }
+        if(minID == rc.getID()) return dir;
     }
     static Direction moveDirection(RobotInfo[] enemies) throws GameActionException{
         Direction dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(8)];
