@@ -31,7 +31,7 @@ public class Pathing {
         Direction dir = actual.directionTo(objective);
         if(rc.canMove(dir)) {
             rc.move(dir);
-            rc.setIndicatorString("Puedo direccion buena");
+  //          rc.setIndicatorString("Puedo direccion buena");
             currentDirection = null;
             return;
         }
@@ -41,13 +41,13 @@ public class Pathing {
         for(int i = 0; i < directions.length; ++i) {
             currentDirection = (rightHanded ? currentDirection.rotateRight() : currentDirection.rotateLeft());
             if (rc.canMove(currentDirection)) {
-                rc.setIndicatorString("Puedo direccion" + currentDirection);
+    //            rc.setIndicatorString("Puedo direccion" + currentDirection);
                 rc.move(currentDirection);
                 currentDirection = (rightHanded ? currentDirection.rotateLeft() : currentDirection.rotateRight());
                 return;
             }
         }
-        rc.setIndicatorString("no puedo");
+    //    rc.setIndicatorString("no puedo");
         currentDirection = null;
     }
     static boolean moveRandom() throws GameActionException{

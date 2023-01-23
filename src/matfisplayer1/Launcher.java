@@ -20,6 +20,7 @@ public class Launcher extends Robot{
         }
     }
     static void runLauncher() throws GameActionException {
+        turnCount++;
         Team opponent = rc.getTeam().opponent();
         RobotInfo[] enemies = rc.senseNearbyRobots(-1, opponent);
         RobotInfo[] allies = rc.senseNearbyRobots(-1, rc.getTeam());
@@ -81,9 +82,11 @@ public class Launcher extends Robot{
         MapLocation HQloc = null;
         int minLife = Integer.MAX_VALUE;
         int maxID = 0;
+        int minPriority = 10;
         for(RobotInfo r : enemies) if(r.type == RobotType.HEADQUARTERS) HQloc = r.location;
         for(RobotInfo r : enemies){
-            if(r.health < minLife || (r.health == minLife && r.ID > maxID)) {
+            int priority = getPriority(r);
+            if(priority < minPriority ||( priority == minPriority && (r.health < minLife || (r.health == minLife && r.ID > maxID)))) {
                 MapLocation posObj = rc.getLocation().add(rc.getLocation().directionTo(r.location));
                 if (HQloc == null || HQloc.isWithinDistanceSquared(posObj,RobotType.LAUNCHER.actionRadiusSquared))
                     if(HQloc == null || !HQloc.isWithinDistanceSquared(posObj, RobotType.HEADQUARTERS.actionRadiusSquared)){

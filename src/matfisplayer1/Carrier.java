@@ -9,8 +9,8 @@ public class Carrier extends Robot{
         rc = robc;
         Pathing.set(rc, rng.nextBoolean());
         Comms.setRC(rc);
-
         HQs = Comms.updateHeadquarterInfo();
+
         hqLocation = Pathing.findHqLocation();
         wellLocation = Pathing.findWellLocation();
         Pathing.setObjective(wellLocation);
@@ -18,10 +18,13 @@ public class Carrier extends Robot{
         System.out.println(rc.getType() + " HE nadic");
     }
     static void runCarrier() throws GameActionException {
+        turnCount++;
+        int[] islands = rc.senseNearbyIslands();
         if(rc.canTakeAnchor(hqLocation,Anchor.STANDARD)) {
             rc.takeAnchor(hqLocation, Anchor.STANDARD);
-            rc.setIndicatorString("Getting an anchor");
+//            rc.setIndicatorString("Getting an anchor");
         }
+
         if (rc.getAnchor() != null) {
             rc.setIndicatorString("Anchor");
             if(islandLocation == null) {
@@ -32,28 +35,26 @@ public class Carrier extends Robot{
             if(rc.canPlaceAnchor()) {
                 rc.placeAnchor();
             }
-            return;
-        }
-        if(gettingRec){
-            rc.setIndicatorString("Going");
+        } else if(gettingRec){
+  //          rc.setIndicatorString("Going");
             if(wellLocation == null) {
                 wellLocation = Pathing.findWellLocation();
                 Pathing.setObjective(wellLocation);
-                rc.setIndicatorString("Going nowhere");
+    //            rc.setIndicatorString("Going nowhere");
                 Pathing.move();
             }else if (rc.canCollectResource(wellLocation, -1)) {
-                rc.setIndicatorString("Getting things");
+      //          rc.setIndicatorString("Getting things");
                 rc.collectResource(wellLocation, -1);
                 if(carrying() == GameConstants.CARRIER_CAPACITY) {
                     gettingRec = false;
                     Pathing.setObjective(hqLocation);
                 }
             } else{
-                rc.setIndicatorString("Going somewhere" + wellLocation);
+        //        rc.setIndicatorString("Going somewhere" + wellLocation);
                 Pathing.move();
             }
         }else{
-            rc.setIndicatorString("Returning");
+        //    rc.setIndicatorString("Returning");
             ResourceType res = nonEmptyResource();
             if(rc.canTransferResource(hqLocation, res, rc.getResourceAmount(res))){
                 rc.transferResource(hqLocation,res,rc.getResourceAmount(res));
@@ -65,6 +66,8 @@ public class Carrier extends Robot{
                 Pathing.move();
             }
         }
+        Comms.addIslands(islands);
+        Comms.dumpQueue();
     }
     private static int carrying(){
         return rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.ELIXIR) + rc.getResourceAmount(ResourceType.MANA);

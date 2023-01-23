@@ -14,19 +14,13 @@ public class Comms {
         rc = robc;
     }
     static void dumpQueue() throws GameActionException{
-        while (Clock.getBytecodesLeft() > 350 && !commsQueue.isEmpty() && rc.canWriteSharedArray(0,0)){
-            switch (commsQueue.element().getType()){
-                case ENEMY:
-                    addEnemy(commsQueue.element().getLoc());
-                    break;
-                case ISLAND:
-                    addIsland(commsQueue.element().getLoc(), commsQueue.element().getLife());
-                    break;
-                case OBSTACLE:
-                    addObstacle(commsQueue.element().getLoc());
-                    break;
+        while (Clock.getBytecodesLeft() > 350 && !commsQueue.isEmpty()){
+            if(sameIslandInfo(commsQueue.element())){
+                commsQueue.remove();
+            } else if(rc.canWriteSharedArray(commsQueue.element().id,commsQueue.element().msg)) {
+                rc.writeSharedArray(commsQueue.element().id, commsQueue.element().msg);
+                commsQueue.remove();
             }
-            commsQueue.remove();
         }
     }
     static void addHeadquarter() throws GameActionException {
@@ -40,8 +34,6 @@ public class Comms {
     }
     static void addEnemy(MapLocation loc){
 
-    }
-    static void addIsland(MapLocation loc, int life){
     }
     static void addObstacle(MapLocation loc){
 
@@ -68,5 +60,15 @@ public class Comms {
             return 0;
         }
         return 1+m.x+rc.getMapWidth()*m.y;
+    }
+    public static void addIslands(int[] islands){
+        for(int r : islands) if(){
+
+        }
+    }
+    private static boolean sameIslandInfo(CommsInfo info) throws GameActionException{
+        int r = rc.readSharedArray(info.id);
+        if(r == 0) return false;
+        return Math.abs((r & 0b1111) - (info.msg & 0b1111)) <= 1;
     }
 }
