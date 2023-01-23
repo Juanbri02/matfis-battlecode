@@ -62,9 +62,6 @@ public class Comms {
         return 1+m.x+rc.getMapWidth()*m.y;
     }
     public static void addIslands(int[] islands){
-        for(int r : islands) if(){
-
-        }
     }
     private static boolean sameIslandInfo(CommsInfo info) throws GameActionException{
         int r = rc.readSharedArray(info.id);

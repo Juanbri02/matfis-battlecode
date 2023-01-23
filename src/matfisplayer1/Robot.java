@@ -1,6 +1,7 @@
 package matfisplayer1;
 
 import battlecode.common.Direction;
+import battlecode.common.GameConstants;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 
@@ -9,7 +10,7 @@ import java.util.Random;
 public class Robot{
     static protected RobotController rc;
     static protected MapLocation[] HQs;
-    static protected IslandInfo[] Islands;
+    static protected IslandInfo[] Islands = new IslandInfo[GameConstants.MAX_NUMBER_ISLANDS];
     static protected int turnCount = 0;
     protected static final Direction[] directions = {
             Direction.NORTH,

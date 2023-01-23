@@ -14,22 +14,36 @@ public class Carrier extends Robot{
         hqLocation = Pathing.findHqLocation();
         wellLocation = Pathing.findWellLocation();
         Pathing.setObjective(wellLocation);
-        islandLocation = Pathing.findIslandLocation();
         System.out.println(rc.getType() + " HE nadic");
     }
     static void runCarrier() throws GameActionException {
         turnCount++;
         int[] islands = rc.senseNearbyIslands();
+        actIslands(islands);
         if(rc.canTakeAnchor(hqLocation,Anchor.STANDARD)) {
             rc.takeAnchor(hqLocation, Anchor.STANDARD);
 //            rc.setIndicatorString("Getting an anchor");
         }
-
         if (rc.getAnchor() != null) {
-            rc.setIndicatorString("Anchor");
-            if(islandLocation == null) {
-                islandLocation = Pathing.findIslandLocation();
-                Pathing.setObjective(islandLocation);
+            if(turnCount%3 == 0){
+                rc.setIndicatorString("Anchor");
+                int minDist = 10000;
+                int priority = 3;
+                MapLocation obj = null;
+                for (IslandInfo info : Islands)
+                    if (info.getLoc() != null) {
+                        int actPrio;
+                        if (info.getOwner() == rc.getTeam()) actPrio = 2;
+                        else if (info.getOwner() == Team.NEUTRAL) actPrio = 0;
+                        else actPrio = 1;
+                        int dist = info.getLoc().distanceSquaredTo(rc.getLocation());
+                        if (actPrio < priority || (actPrio == priority && dist < minDist)) {
+                            minDist = dist;
+                            priority = actPrio;
+                            obj = info.getLoc();
+                        }
+                    }
+                Pathing.setObjective(obj);
             }
             Pathing.move();
             if(rc.canPlaceAnchor()) {
@@ -67,7 +81,7 @@ public class Carrier extends Robot{
             }
         }
         Comms.addIslands(islands);
-        Comms.dumpQueue();
+        //Comms.dumpQueue();
     }
     private static int carrying(){
         return rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.ELIXIR) + rc.getResourceAmount(ResourceType.MANA);
@@ -76,5 +90,13 @@ public class Carrier extends Robot{
         if (rc.getResourceAmount(ResourceType.ADAMANTIUM) != 0) return ResourceType.ADAMANTIUM;
         if (rc.getResourceAmount(ResourceType.MANA) != 0) return ResourceType.MANA;
         return ResourceType.ELIXIR;
+    }
+
+    static void actIslands(int[] islands) throws GameActionException{
+        /*
+        for(int i : islands){
+            if(Islands[i].getLoc() == null) Islands[i].setLoc(rc.senseNearbyIslandLocations(i)[0]);
+            Islands[i].set(rc.senseTeamOccupyingIsland(i), rc.senseAnchorPlantedHealth(i), turnCount);
+        }*/
     }
 }
