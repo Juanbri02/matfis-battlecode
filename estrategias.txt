@@ -1,14 +1,15 @@
-dfbleiufhlkedjfn.skedf
+##Launchers:
+-Añadir grupos diversos. Dividir Para defender las bases y atacar.
+-Añadir delay antes de empezar a atacar. mejorar el camino que siguen cuando no tienen objetivos
+-Asistencia en carretera para los que llevan ancla y defensa de las islas
 
-f
+##Amplifiers:
+-Añadir seguimiento a otras tropas
 
-asdfajfnñalfwe
+##Carriers:
+-Añadir sistema para repartirse más equitativamente entre los diversos tipos de pozos
+-Mejorar camino a las islas
 
-
-
-
-sdalksdwedw 22
-2 12nnd
-
-
-
+##HQs
+-Mejor decisiones de producción de unidades.
+-producir anclas de vez en cuando.

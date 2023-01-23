@@ -10,10 +10,12 @@ public class Headquarters extends Robot{
         rc = robc;
         Comms.setRC(rc);
         Comms.addHeadquarter();
+        Comms.dumpQueue();
     }
     static void runHeadquarters() throws GameActionException {
         // Pick a direction to build in.
         Direction dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
+        RobotInfo[] allies = rc.senseNearbyRobots(-1, rc.getTeam());
         MapLocation newLoc = rc.getLocation().add(dir);
         if (RobotPlayer.turnCount % 2 == 0) {
             rc.setIndicatorString("Trying to build a carrier");
@@ -32,6 +34,5 @@ public class Headquarters extends Robot{
             rc.buildAnchor(Anchor.STANDARD);
             rc.setIndicatorString("Building anchor! " + rc.getAnchor());
         }
-        Comms.dumpQueue();
     }
 }
