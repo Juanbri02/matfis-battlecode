@@ -2,14 +2,14 @@ package matfisplayer1;
 
 import battlecode.common.*;
 
-public class Launcher{
-    static RobotController rc;
+public class Launcher extends Robot{
     static MapLocation hqLocation;
     static int allyLaunchers;
+    static int turnsWithoutMoving = 0;
     static boolean waiting = true;
     static void newLauncher(RobotController robc) throws GameActionException{
         rc = robc;
-        Pathing.set(rc, RobotPlayer.rng.nextBoolean());
+        Pathing.set(rc, rng.nextBoolean());
         hqLocation = Pathing.findHqLocation();
         if(rc.getMapWidth() == rc.getMapHeight()){
             Pathing.setObjective(new MapLocation(rc.getMapHeight() - hqLocation.x,rc.getMapWidth() - hqLocation.y));
@@ -42,8 +42,10 @@ public class Launcher{
         }
         if(toMove == null) {
             Pathing.move();
-        } else {
-            Pathing.moveTowards(toMove);
+        } else if (!Pathing.moveTowards(toMove)){
+            turnsWithoutMoving++;
+            if(turnsWithoutMoving > 2 && !Pathing.moveRandom())
+                turnsWithoutMoving = 0;
         }
     }
     static MapLocation getTarget(RobotInfo[] enemies){
@@ -65,7 +67,7 @@ public class Launcher{
         int minID = rc.getID();
         MapLocation loc = null;
         for(RobotInfo r : allies) if(r.type == RobotType.LAUNCHER) {
-
+            allyLaunchers++;
             if(r.ID < minID-1){
                 minID = r.ID;
                 loc = r.getLocation();
@@ -92,5 +94,16 @@ public class Launcher{
             }
         }
         return loc;
+    }
+    static int getPriority(RobotInfo r){
+        switch (r.getType()){
+            case BOOSTER: return 1;
+            case DESTABILIZER: return 2;
+            case LAUNCHER: return 3;
+            case CARRIER: return 4;
+            case AMPLIFIER: return 5;
+            case HEADQUARTERS: return 6;
+        }
+        return 100;
     }
 }

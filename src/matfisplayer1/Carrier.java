@@ -2,14 +2,12 @@ package matfisplayer1;
 
 import battlecode.common.*;
 
-import java.util.Random;
-
 public class Carrier extends Robot{
     static MapLocation hqLocation, wellLocation, islandLocation;
     static boolean gettingRec = true;
     static void newCarrier(RobotController robc) throws GameActionException{
         rc = robc;
-        Pathing.set(rc, RobotPlayer.rng.nextBoolean());
+        Pathing.set(rc, rng.nextBoolean());
         Comms.setRC(rc);
 
         HQs = Comms.updateHeadquarterInfo();

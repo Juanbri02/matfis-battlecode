@@ -6,6 +6,9 @@ import battlecode.common.*;
  * This code is wrapped inside the infinite loop in run(), so it is called once per turn.
  */
 public class Headquarters extends Robot{
+    static int carrierProduced = 0;
+    static int launcherProduced = 0;
+    static boolean parity = true;
     static void newHeadquarters(RobotController robc) throws GameActionException {
         rc = robc;
         Comms.setRC(rc);
@@ -13,26 +16,56 @@ public class Headquarters extends Robot{
         Comms.dumpQueue();
     }
     static void runHeadquarters() throws GameActionException {
-        // Pick a direction to build in.
-        Direction dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
-        RobotInfo[] allies = rc.senseNearbyRobots(-1, rc.getTeam());
-        MapLocation newLoc = rc.getLocation().add(dir);
-        if (RobotPlayer.turnCount % 2 == 0) {
-            rc.setIndicatorString("Trying to build a carrier");
-            if (rc.canBuildRobot(RobotType.CARRIER, newLoc)) {
-                rc.buildRobot(RobotType.CARRIER, newLoc);
+        turnCount++;
+        parity = !parity;
+        RobotInfo[] allies = rc.senseNearbyRobots(-1,rc.getTeam());
+        rc.setIndicatorString(carrierProduced + "<carr - launc>" +launcherProduced);
+        if(turnCount < 100){
+            for(Direction dir : directions){
+                if(parity && rc.canBuildRobot(RobotType.CARRIER, rc.getLocation().add(dir))) {
+                    rc.buildRobot(RobotType.CARRIER, rc.getLocation().add(dir));
+                    carrierProduced++;
+                    parity = !parity;
+                } else if(parity && rc.canBuildRobot(RobotType.LAUNCHER,rc.getLocation().add(dir))){
+                    rc.buildRobot(RobotType.LAUNCHER,rc.getLocation().add(dir));
+                    launcherProduced++;
+                    parity = !parity;
+                }
             }
-        } else {
-            // Let's try to build a launcher.
-            rc.setIndicatorString("Trying to build a launcher");
-            if (rc.canBuildRobot(RobotType.LAUNCHER, newLoc)) {
-                rc.buildRobot(RobotType.LAUNCHER, newLoc);
+        } else if(turnCount < 750){
+            if(turnCount%8 == 0)
+                rc.buildAnchor(Anchor.STANDARD);
+            for(Direction dir : directions){
+                if(parity && rc.canBuildRobot(RobotType.CARRIER, rc.getLocation().add(dir))) {
+                    rc.buildRobot(RobotType.CARRIER, rc.getLocation().add(dir));
+                    carrierProduced++;
+                    parity = !parity;
+                    return;
+                }
+                else if(parity && rc.canBuildRobot(RobotType.LAUNCHER,rc.getLocation().add(dir))){
+                    rc.buildRobot(RobotType.LAUNCHER,rc.getLocation().add(dir));
+                    launcherProduced++;
+                    parity = !parity;
+                    return;
+                }
             }
-        }
-        if (rc.canBuildAnchor(Anchor.STANDARD) && rc.getResourceAmount(ResourceType.ADAMANTIUM) > 100 ) {
-            // If we can build an anchor do it!
-            rc.buildAnchor(Anchor.STANDARD);
-            rc.setIndicatorString("Building anchor! " + rc.getAnchor());
+        }else{
+            if((turnCount%5 == 0 || allies.length > 20)&& rc.canBuildAnchor(Anchor.STANDARD)) {
+                rc.buildAnchor(Anchor.STANDARD);
+            }
+            for(Direction dir : directions){
+                if(parity && rc.getResourceAmount(ResourceType.ADAMANTIUM) > 150 && rc.canBuildRobot(RobotType.CARRIER, rc.getLocation().add(dir))) {
+                    rc.buildRobot(RobotType.CARRIER, rc.getLocation().add(dir));
+                    carrierProduced++;
+                    return;
+                }
+                else if(parity && rc.getResourceAmount(ResourceType.MANA) > 160 && rc.canBuildRobot(RobotType.LAUNCHER,rc.getLocation().add(dir))){
+                    rc.buildRobot(RobotType.LAUNCHER,rc.getLocation().add(dir));
+                    launcherProduced++;
+                    return;
+                }
+                parity = !parity;
+            }
         }
     }
 }

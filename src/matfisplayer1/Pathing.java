@@ -22,7 +22,7 @@ public class Pathing {
         return rc.getLocation().distanceSquaredTo(objective);
     }
     static void setRandomObjective(){
-        objective = new MapLocation(RobotPlayer.rng.nextInt(rc.getMapHeight()), RobotPlayer.rng.nextInt(rc.getMapWidth()));
+        objective = new MapLocation(Robot.rng.nextInt(rc.getMapHeight()), Robot.rng.nextInt(rc.getMapWidth()));
     }
     static void move() throws GameActionException{
         if(objective == null) moveRandom();
@@ -50,10 +50,14 @@ public class Pathing {
         rc.setIndicatorString("no puedo");
         currentDirection = null;
     }
-    static void moveRandom() throws GameActionException{
-        Direction dir = directions[RobotPlayer.rng.nextInt(directions.length)];
-        if(rc.canMove(dir)) rc.move(dir);
+    static boolean moveRandom() throws GameActionException{
+        Direction dir = directions[Robot.rng.nextInt(directions.length)];
+        if(rc.canMove(dir)) {
+            rc.move(dir);
+            return true;
+        }
         rc.setIndicatorString("Random move");
+        return false;
     }
     static MapLocation findHqLocation() throws GameActionException {
         RobotInfo[] units = rc.senseNearbyRobots(-1, rc.getTeam());
@@ -70,19 +74,21 @@ public class Pathing {
         if(islands.length > 0) return rc.senseNearbyIslandLocations(islands[0])[0];
         return null;
     }
-    static void moveTowards(MapLocation obj) throws GameActionException{
+    static boolean moveTowards(MapLocation obj) throws GameActionException{
         Direction dir = rc.getLocation().directionTo(obj);
         if (rc.canMove(dir)) {
             rc.move(dir);
-            return;
+            return true;
         }
         if(rc.canMove(dir.rotateLeft())){
             rc.move(dir.rotateLeft());
-            return;
+            return true;
         }
         if(rc.canMove(dir.rotateRight())){
             rc.move(dir.rotateRight());
+            return true;
         }
+        return false;
     }
     static void set(RobotController robc, boolean b){
         rc = robc;

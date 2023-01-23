@@ -2,23 +2,8 @@ package matfisplayer1;
 
 import battlecode.common.*;
 
-import java.util.Random;
-
 public strictfp class RobotPlayer {
-
-    static int turnCount = 0;
-    static final Random rng = new Random(6147);
-    static final Direction[] directions = {
-            Direction.NORTH,
-            Direction.NORTHEAST,
-            Direction.EAST,
-            Direction.SOUTHEAST,
-            Direction.SOUTH,
-            Direction.SOUTHWEST,
-            Direction.WEST,
-            Direction.NORTHWEST,
-    };
-    public static void run(RobotController rc) throws GameActionException {
+    public static void run(RobotController rc){
         try {
             switch (rc.getType()) {
                 case HEADQUARTERS:  Headquarters.newHeadquarters(rc);   break;
@@ -37,7 +22,6 @@ public strictfp class RobotPlayer {
             e.printStackTrace();
         }
         while (true) {
-            turnCount += 1;
             try {
                 switch (rc.getType()) {
                     case HEADQUARTERS:  Headquarters.runHeadquarters(); break;

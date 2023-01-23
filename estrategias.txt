@@ -1,14 +1,17 @@
 ##Launchers:
 -Añadir grupos diversos. Dividir Para defender las bases y atacar.
+-Atacar primero a los launchers
 -Añadir delay antes de empezar a atacar. mejorar el camino que siguen cuando no tienen objetivos
 -Asistencia en carretera para los que llevan ancla y defensa de las islas
+
 
 ##Amplifiers:
 -Añadir seguimiento a otras tropas
 
 ##Carriers:
 -Añadir sistema para repartirse más equitativamente entre los diversos tipos de pozos
--Mejorar camino a las islas
+-Mejorar camino a las islas, defender las que pongo
+-Intentar no duplicar, poner en otras
 
 ##HQs
 -Mejor decisiones de producción de unidades.

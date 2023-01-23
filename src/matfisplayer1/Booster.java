@@ -6,7 +6,7 @@ import battlecode.common.RobotController;
 public class Booster extends Robot{
     static void newBooster(RobotController robc) throws GameActionException {
         rc = robc;
-        Pathing.set(rc, RobotPlayer.rng.nextBoolean());
+        Pathing.set(rc, rng.nextBoolean());
     }
     static void runBooster() throws GameActionException {
     }
