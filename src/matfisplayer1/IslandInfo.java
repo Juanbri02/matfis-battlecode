@@ -8,10 +8,11 @@ public class IslandInfo {
     private int life;
     private Team owner;
     public int lastAct;
-    public IslandInfo(MapLocation loc, int life, int lastAct){
+    public IslandInfo(MapLocation loc, int life, int lastAct, Team team){
         this.loc = loc;
         this.life = life;
         this.lastAct = lastAct;
+        this.owner = team;
     }
     public void set(Team owner, int life, int lastAct){
         this.life = life;

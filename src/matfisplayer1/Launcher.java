@@ -28,20 +28,28 @@ public class Launcher extends Robot{
         if (toAttack != null && rc.canAttack(toAttack)) {
             rc.attack(toAttack);
         }
-        if(waiting) allyLaunchers = 0;
-        MapLocation toMove = moveGroup(allies);
-        if(waiting && allyLaunchers < 3){
-            Pathing.moveRandom();
-            return;
+        allyLaunchers = countAllyLaunchers(allies);
+        if(allyLaunchers < 2 && !waiting){
+            Pathing.setObjective(hqLocation);
+            Pathing.move();
+        } else if(waiting){
+            if(allyLaunchers < 4) return;
+            waiting = false;
         }
-        waiting = false;
+        MapLocation toMove = moveEnemy(enemies);
         if(toMove == null) {
-            toMove = moveEnemy(enemies);
-            rc.setIndicatorString("move enemy " + toMove);
-        } else{
-            rc.setIndicatorString("Move towards ally" + toMove);
+            toMove = moveGroup(allies);
         }
         if(toMove == null) {
+            if(Pathing.objective.equals(hqLocation)){
+                if(rc.getMapWidth() == rc.getMapHeight()){
+                    Pathing.setObjective(new MapLocation(rc.getMapHeight() - hqLocation.x,rc.getMapWidth() - hqLocation.y));
+                } else if (rc.getMapWidth() < rc.getMapHeight()) {
+                    Pathing.setObjective(new MapLocation(rc.getMapHeight() - hqLocation.x,hqLocation.y));
+                } else{
+                    Pathing.setObjective(new MapLocation(rc.getMapHeight(),rc.getMapWidth() - hqLocation.y));
+                }
+            }
             Pathing.move();
         } else if (!Pathing.moveTowards(toMove)){
             turnsWithoutMoving++;
@@ -64,11 +72,15 @@ public class Launcher extends Robot{
         }
         return loc;
     }
+    static int countAllyLaunchers(RobotInfo[] allies){
+        int sol = 0;
+        for(RobotInfo r : allies) if(r.type == RobotType.LAUNCHER) sol++;
+        return sol;
+    }
     static MapLocation moveGroup(RobotInfo[] allies){
         int minID = rc.getID();
         MapLocation loc = null;
         for(RobotInfo r : allies) if(r.type == RobotType.LAUNCHER) {
-            allyLaunchers++;
             if(r.ID < minID-1){
                 minID = r.ID;
                 loc = r.getLocation();

@@ -33,7 +33,7 @@ public class Headquarters extends Robot{
                 }
             }
         } else if(turnCount < 750){
-            if(turnCount%8 == 0)
+            if(turnCount%8 == 0 && rc.canBuildAnchor(Anchor.STANDARD))
                 rc.buildAnchor(Anchor.STANDARD);
             for(Direction dir : directions){
                 if(parity && rc.canBuildRobot(RobotType.CARRIER, rc.getLocation().add(dir))) {

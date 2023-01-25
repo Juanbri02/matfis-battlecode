@@ -24,16 +24,15 @@ public class Pathing {
     static void setRandomObjective(){
         objective = new MapLocation(Robot.rng.nextInt(rc.getMapHeight()), Robot.rng.nextInt(rc.getMapWidth()));
     }
-    static void move() throws GameActionException{
-        if(objective == null) moveRandom();
+    static boolean move() throws GameActionException{
+        if(objective == null) return moveRandom();
         MapLocation actual = rc.getLocation();
-        if(actual.equals(objective) || !rc.isMovementReady()) return;
+        if(actual.equals(objective) || !rc.isMovementReady()) return false;
         Direction dir = actual.directionTo(objective);
         if(rc.canMove(dir)) {
             rc.move(dir);
-  //          rc.setIndicatorString("Puedo direccion buena");
             currentDirection = null;
-            return;
+            return true;
         }
         if(currentDirection == null){
             currentDirection = dir;
@@ -41,14 +40,13 @@ public class Pathing {
         for(int i = 0; i < directions.length; ++i) {
             currentDirection = (rightHanded ? currentDirection.rotateRight() : currentDirection.rotateLeft());
             if (rc.canMove(currentDirection)) {
-    //            rc.setIndicatorString("Puedo direccion" + currentDirection);
                 rc.move(currentDirection);
                 currentDirection = (rightHanded ? currentDirection.rotateLeft() : currentDirection.rotateRight());
-                return;
+                return true;
             }
         }
-    //    rc.setIndicatorString("no puedo");
         currentDirection = null;
+        return false;
     }
     static boolean moveRandom() throws GameActionException{
         Direction dir = directions[Robot.rng.nextInt(directions.length)];

@@ -28,7 +28,7 @@ public class Carrier extends Robot{
             if(turnCount%3 == 0){
                 rc.setIndicatorString("Anchor");
                 int minDist = 10000;
-                int priority = 3;
+                int priority = 2;
                 MapLocation obj = null;
                 for (IslandInfo info : Islands)
                     if (info.getLoc() != null) {
@@ -50,25 +50,20 @@ public class Carrier extends Robot{
                 rc.placeAnchor();
             }
         } else if(gettingRec){
-  //          rc.setIndicatorString("Going");
             if(wellLocation == null) {
                 wellLocation = Pathing.findWellLocation();
                 Pathing.setObjective(wellLocation);
-    //            rc.setIndicatorString("Going nowhere");
                 Pathing.move();
             }else if (rc.canCollectResource(wellLocation, -1)) {
-      //          rc.setIndicatorString("Getting things");
                 rc.collectResource(wellLocation, -1);
                 if(carrying() == GameConstants.CARRIER_CAPACITY) {
                     gettingRec = false;
                     Pathing.setObjective(hqLocation);
                 }
             } else{
-        //        rc.setIndicatorString("Going somewhere" + wellLocation);
                 Pathing.move();
             }
         }else{
-        //    rc.setIndicatorString("Returning");
             ResourceType res = nonEmptyResource();
             if(rc.canTransferResource(hqLocation, res, rc.getResourceAmount(res))){
                 rc.transferResource(hqLocation,res,rc.getResourceAmount(res));
@@ -93,10 +88,11 @@ public class Carrier extends Robot{
     }
 
     static void actIslands(int[] islands) throws GameActionException{
-        /*
         for(int i : islands){
-            if(Islands[i].getLoc() == null) Islands[i].setLoc(rc.senseNearbyIslandLocations(i)[0]);
-            Islands[i].set(rc.senseTeamOccupyingIsland(i), rc.senseAnchorPlantedHealth(i), turnCount);
-        }*/
+            if(Islands[i] == null)
+                Islands[i] = new IslandInfo(rc.senseNearbyIslandLocations(i)[0], rc.senseAnchorPlantedHealth(i), turnCount, rc.senseTeamOccupyingIsland(i));
+            else
+                Islands[i].set(rc.senseTeamOccupyingIsland(i), rc.senseAnchorPlantedHealth(i), turnCount);
+        }
     }
 }
